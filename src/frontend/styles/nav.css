@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --bg-color: #121212; 
+  --primary-color: #416ac7;
+  --secondary-color: #282828;
+  --third-color: #3f3f3f;
+}
+
+/* General Navbar Styles */
+.navbar {
+    font-family: "Lato", sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--secondary-color);
+    color: white;
+    z-index: 1000;
+    padding: 0.8rem 1.5rem;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.014);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+    color: var(--primary-color);
+}
+
+.navbar-brand:hover {
+    color: var(--primary-color);
+}
+
+/* Hamburger Menu */
+.navbar-toggle {
+    display: none; /* Hidden for large screens */
+    flex-direction: column;
+    gap: 0.4rem;
+    cursor: pointer;
+}
+
+.navbar-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    transition: transform 0.3s ease;
+}
+
+.navbar-toggle.active span:nth-child(1) {
+    transform: rotate(45deg);
+    position: relative;
+    top: 8px;
+}
+
+.navbar-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.navbar-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg);
+    position: relative;
+    top: -8px;
+}
+
+/* Logout Link */
+.navbar-links .logout {
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    list-style: none;
+}
+
+.navbar-links .logout:hover {
+    transition: color 0.3s ease;
+    color: var(--primary-color); 
+}
+
+/* Focus style for accessibility */
+.navbar-links .logout:focus {
+    outline: none;
+   
+}
+
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none; /* Hide links by default */
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* Positioned below the navbar */
+        right: 10px;
+        background-color: var(--secondary-color);
+        border-radius: 5px;
+        padding: 1rem;
+        width: 80%;
+        max-width: 250px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar-links.active {
+        display: flex; /* Show links when toggled */
+    }
+
+    .navbar-toggle {
+        display: flex; /* Show hamburger menu for screens <= 768px */
+    }
+
+    .navbar-brand {
+        font-size: 1.3rem; /* Slightly smaller on small screens */
+    }
+}
+
+/* Mobile Specific Adjustments */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0.6rem 1rem; /* Reduce padding for smaller devices */
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem; /* Reduce brand size */
+    }
+
+    .navbar-links {
+        top: 50px; /* Adjust dropdown position */
+    }
+
+    .navbar-links a {
+        font-size: 0.9rem; /* Adjust font size for links */
+        padding: 0.5rem 0;
+    }
+}

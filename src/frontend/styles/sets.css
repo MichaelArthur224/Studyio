@@ -1,0 +1,92 @@
+/* General body styles */
+:root {
+  --bg-color: #121212; /* Dark background */
+  --primary-color: #416ac7; /* Primary blue */
+  --secondary-color: #282828; /* Dark gray */
+  --third-color: #3f3f3f; /* Slightly lighter gray */
+  --highlight-color: #f5a623; /* Accent color */
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center vertically */
+  min-height: 100vh; /* Allow content to grow beyond viewport */
+  overflow: auto; /* Enable page scrolling if necessary */
+  color: #fff; /* White text color for contrast */
+}
+
+h1 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+/* Home container */
+.saved-sets-container {
+  margin-top: 5rem; /* Adjust spacing from top */
+  padding: 2rem;
+  text-align: center;
+  width: 100%; /* Full width on smaller screens */
+  max-width: 600px; /* Limit max width for responsiveness */
+  background-color: var(--secondary-color);
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
+}
+
+/* Loading text */
+.saved-sets-container p {
+  font-size: 1.2rem;
+  color: #888; /* Lighter gray for loading text */
+}
+
+/* Saved sets */
+.saved-sets {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.saved-set {
+  background-color: var(--third-color);
+  padding: 1rem;
+  margin: 0.8rem 0;
+  width: 100%;
+  max-width: 300px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.saved-set:hover {
+  background-color: var(--primary-color); /* Hover effect */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.navbar h2 {
+  margin: 0;
+}
+
+/* Responsive styles for mobile */
+@media screen and (max-width: 600px) {
+  .saved-sets-container {
+    margin-top: 2rem; /* Reduce top margin on mobile */
+    padding: 1.5rem;
+  }
+
+  .saved-set {
+    max-width: 100%; /* Full width for small screens */
+    margin: 0.5rem 0;
+  }
+
+  h1 {
+    font-size: 1.5rem; /* Smaller title on mobile */
+  }
+}

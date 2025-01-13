@@ -1,0 +1,167 @@
+/* General styles for the game */
+:root {
+  --bg-color: #121212;
+  --primary-color: #416ac7;
+  --secondary-color: #282828;
+  --third-color: #3f3f3f;
+}
+
+.game-container {
+  font-family: "Lato", serif;
+  margin: 0;
+  padding: 10px;
+  max-width: 100%;
+  width: 80vh;
+  height: auto;
+  margin: 0 auto;
+  background-color: var(--secondary-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+p {
+  color: white;
+}
+
+h2 {
+  text-align: center;
+  color: white;
+}
+
+h3, h4 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.flashcard-container {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap; /* Added to allow wrapping of flashcards */
+}
+
+.flashcard-list, .answer-list {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.flashcards, .answer {
+  padding: 15px;
+  background-color: var(--third-color);
+  border-radius: 8px;
+  border: 1px solid white;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 100%;
+  max-width: 250px; /* Adjusted max-width */
+  margin: 1rem;
+  box-sizing: border-box; /* Ensures padding does not cause overflow */
+}
+
+.flashcards:hover, .answer:hover {
+  border: 1px solid var(--primary-color);
+  transform: scale(1.05);
+}
+
+.selected {
+  background-color: #416ac7; /* blue when selected */
+}
+
+.selected-answer {
+  background-color: #416ac7; /*  when selected as answer */
+}
+
+.match-result {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.correct {
+  color: green;
+}
+
+.wrong {
+  color: red;
+}
+
+.counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+.counter p {
+  margin: 0 10px;
+}
+
+.restart-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #416ac7;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.restart-button:hover {
+  background-color: #0d5abf;
+}
+
+.game-over {
+  text-align: center;
+}
+
+.answer.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .game-container {
+    width: 90%;
+    padding: 5px;
+    margin-top: 5rem;
+  }
+
+  .flashcard-container {
+    flex-direction: column;
+    align-items: center; /* Ensures cards are centered */
+  }
+
+  .flashcards, .answer {
+    max-width: 90%; /* Shrinks flashcards on mobile */
+    padding: 12px;
+  }
+
+  .counter {
+    font-size: 16px;
+  }
+
+  .restart-button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .match-result {
+    font-size: 18px;
+  }
+
+  h2, h3, h4 {
+    font-size: 16px;
+  }
+}

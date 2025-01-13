@@ -1,0 +1,16 @@
+.footer {
+    background-color: #121212;
+    color: #1d1d1d;
+    text-align: center; /* Centers text horizontally */
+    display: flex; /* Use flexbox for better centering */
+    justify-content: center; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+    flex-direction: column; /* Stack content vertically if there’s more than one element */
+    padding: 20px; /* Optional: Add padding for spacing */
+    width: 100%;
+}
+
+.footer p {
+    color: #1d1d1d;
+    margin: 0; /* Remove any default margins */
+}
