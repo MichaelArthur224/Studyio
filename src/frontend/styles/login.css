@@ -87,3 +87,29 @@
 .modal button:hover {
   background-color: var(--third-color);
 }
+
+/* In your login.css or global stylesheet */
+input.error {
+  border: 2px solid red;
+  
+}
+
+
+/* shake animation to make the error more noticeable */
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

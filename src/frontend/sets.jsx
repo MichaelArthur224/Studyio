@@ -4,19 +4,33 @@ import Navbar from './nav.jsx';
 import './styles/sets.css';
 
 function Sets() {
+  
+  console.log(localStorage.getItem('token'));  // Log token to verify its value
+  const token = localStorage.getItem('token');
+if (!token) {
+  console.error('No token found');
+  return; // Handle the missing token case
+}
+
   const [savedSets, setSavedSets] = useState([]); // Initialize as an array
   const [loading, setLoading] = useState(true);
 
   // Fetch saved sets when the component mounts
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
+    const token = localStorage.getItem('token'); // Retrieve token from localStorage
+  
+    if (user && token) {
       const userId = user.id;
       console.log("User ID:", userId); // Log the user ID for debugging
-
+  
       // Fetch the user's saved flashcard sets from the backend
       axios
-        .get(`http://localhost:4000/get-sets/${userId}`)
+        .get(`http://localhost:4000/get-sets/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token to Authorization header
+          },
+        })
         .then((response) => {
           console.log("Saved sets response:", response.data);
           setSavedSets(response.data);
@@ -27,23 +41,30 @@ function Sets() {
           setLoading(false); // Set loading to false even if there is an error
         });
     } else {
-      setLoading(false); // If no user is found in localStorage, set loading to false
+      setLoading(false); // If no user or token is found in localStorage, set loading to false
     }
   }, []);
+  
 
   // Handle loading a set's flashcards
-  const handleLoadSet = (setId) => {
-    axios
-      .get(`/get-flashcards/${setId}`)
-      .then((response) => {
-        const flashcards = response.data;
-        localStorage.setItem('flashcards', JSON.stringify(flashcards));
-        window.location.href = '/home'; // Navigate back to the home page or update the state in your app
-      })
-      .catch((error) => {
-        console.error('Error loading set flashcards:', error);
-      });
-  };
+const handleLoadSet = (setId, userId) => {
+  axios
+    .get(`/get-flashcards/${setId}/${userId}`)
+    .then((response) => {
+      const flashcards = response.data;
+
+      // Save flashcards to local storage
+      localStorage.setItem('flashcards', JSON.stringify(flashcards));
+
+      // Redirect to the card display page
+      window.location.href = `/flashcards/${setId}`;
+    })
+    .catch((error) => {
+      console.error('Error loading set flashcards:', error);
+      alert('Failed to load flashcards. Please try again.');
+    });
+};
+
 
   return (
     <div className="saved-sets-container">

@@ -8,7 +8,7 @@ function About () {
   return (
     <div className="about-container">
       <h1>About</h1>
-        <p>This flashcard memorization game allows users to create, manage, 
+        <p>This website allows users to create, manage, 
             and save their flashcard sets for study and learning. Users can 
             add new flashcards, consisting of a question and its corresponding answer,
              and organize them into sets. The application offers an interactive gameplay

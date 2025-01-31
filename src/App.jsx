@@ -7,6 +7,7 @@ import Login from './frontend/login.jsx';
 import Sets from './frontend/sets.jsx';
 import About from './frontend/about.jsx';
 import Profile from './frontend/profile.jsx';
+import Card from './frontend/card.jsx';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/sets" element={<Sets />} />
         <Route path="/about" element={<About />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/flashcards/:setId" element={<Card />} />
       </Routes>
       <Footer />
     </Router>

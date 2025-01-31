@@ -39,16 +39,23 @@ function SaveSetPopup({ isOpen, onClose, onSave }) {
 function Home() {
   const [flashcards, setFlashcards] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).id : null;
 
-  // Fetch flashcards from server or localStorage when the component mounts
+  // Safe user ID retrieval from localStorage
+  const userData = localStorage.getItem('user');
+  const userId = userData ? JSON.parse(userData).id : null;
+
   useEffect(() => {
     const fetchFlashcards = async () => {
       if (!userId) {
         const savedFlashcards = localStorage.getItem('flashcards');
         if (savedFlashcards) {
-          const flashcardsData = JSON.parse(savedFlashcards);
-          setFlashcards(Array.isArray(flashcardsData) ? flashcardsData : []);
+          try {
+            const flashcardsData = JSON.parse(savedFlashcards);
+            setFlashcards(Array.isArray(flashcardsData) ? flashcardsData : []);
+          } catch (error) {
+            console.error('Error parsing flashcards:', error);
+            setFlashcards([]);  // Set empty flashcards if parsing fails
+          }
         }
         return;
       }
@@ -67,13 +74,6 @@ function Home() {
 
     fetchFlashcards();
   }, [userId]);
-
-  // Save flashcards to localStorage when they change
-  useEffect(() => {
-    if (flashcards.length > 0) {
-      localStorage.setItem('flashcards', JSON.stringify(flashcards));
-    }
-  }, [flashcards]);
 
   const addFlashcard = async () => {
     const question = document.getElementById('question').value;
@@ -137,13 +137,18 @@ function Home() {
   };
 
   const handleSaveSet = async (setName) => {
+    if (!setName.trim()) {
+      alert('Please provide a valid set name.');
+      return;
+    }
+
     if (userId) {
       try {
         // Save the flashcard set first
         const responseSet = await axios.post('http://localhost:4000/save-set', {
           user_id: userId,
           set_name: setName,
-          flashcards: flashcards, // send the flashcards with the set
+          flashcards: flashcards, // Send the flashcards along with the set
         });
 
         alert(responseSet.data.message);
@@ -204,8 +209,4 @@ function Home() {
 }
 
 export default Home;
-
-
-
-
 

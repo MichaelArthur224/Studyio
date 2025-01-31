@@ -1,19 +1,19 @@
 import './styles/footer.css';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import './styles/login.css';
 
 console.log('login page');
 
 function Login() {
-  // State for username, password, email (for registration), and message
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [isRegistering, setIsRegistering] = useState(false); // Toggle state for form type
-  const [showSuccessModal, setShowSuccessModal] = useState(false); // For success modal visibility
-  const navigate = useNavigate(); // Initialize the navigate function
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [passwordError, setPasswordError] = useState(false); // New state for password error
+  const navigate = useNavigate();
 
   // Handle form submission for login
   const handleLogin = async (e) => {
@@ -36,20 +36,22 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message); // Successful login message
+        setMessage(data.message);
 
         // Store the user data or token (if needed)
-        localStorage.setItem('user', JSON.stringify(data.user)); // Store user data (or token)
+        localStorage.setItem('user', JSON.stringify(data.user));
 
-        // Show success modal
         setShowSuccessModal(true);
 
-        // Redirect to the homepage after successful login (optional)
         setTimeout(() => {
-          navigate('/'); // Redirect to the homepage
-        }, 2000); // Wait for 2 seconds before redirecting
+          navigate('/');
+        }, 2000);
       } else {
-        setMessage(data.message); // Error message from the backend
+        setMessage(data.error); // Display error message
+        setPasswordError(true); // Trigger password input highlight
+        setTimeout(() => {
+          setPasswordError(false); // Reset password error state after 1 second
+        }, 1000);
       }
     } catch (err) {
       console.error(err);
@@ -79,12 +81,11 @@ function Login() {
 
       if (response.ok) {
         setMessage('Registration successful! Redirecting to login...');
-        setIsRegistering(false); // Switch back to login form after successful registration
+        setIsRegistering(false);
 
-        // Redirect to the login page after successful registration
-        navigate('/login'); // Redirect to the login page
+        navigate('/login');
       } else {
-        setMessage(data.message); // Error message from the backend
+        setMessage(data.message);
       }
     } catch (err) {
       console.error(err);
@@ -160,6 +161,7 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            className={passwordError ? 'error' : ''} // Add error class if password is incorrect
           />
           <br />
           <br />
@@ -191,6 +193,7 @@ function Login() {
 }
 
 export default Login;
+
 
 
 

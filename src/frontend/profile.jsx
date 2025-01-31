@@ -8,17 +8,23 @@ function Profile() {
 
   useEffect(() => {
     const fetchUsername = async () => {
-      const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).id : null;
+      const user = localStorage.getItem('user');
+      const token = localStorage.getItem('token');
       
-      if (userId) {
+      console.log('User:', user);  // Log user data
+      console.log('Token:', token); // Log token to check its validity
+  
+      if (user && token) {
+        const userId = JSON.parse(user).id;
+        
         try {
-          const token = localStorage.getItem('token');
           const response = await axios.get(`http://localhost:4000/get-username/${userId}`, {
             headers: {
-              Authorization: `Bearer ${token}`,
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
             },
           });
-          setUsername(response.data.username); // Assuming the API returns a 'username' field
+          setUsername(response.data.username); 
         } catch (error) {
           console.error('Error fetching username:', error);
           alert('There was an error fetching your username. Please try again.');
@@ -27,9 +33,10 @@ function Profile() {
         alert('You must be logged in to view your profile.');
       }
     };
-
+  
     fetchUsername();
-  }, []);
+  }, []); 
+  
 
   return (
     <div className="profile-container">

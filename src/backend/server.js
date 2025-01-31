@@ -1,18 +1,21 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const pool = require('./db'); // Ensure your pool is properly configured
+const pool = require('./db'); 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const secret = 'your_secret_key';
+require('dotenv').config(); 
 
 const PORT = process.env.PORT || 4000;
+// Secret Key for JWT
+const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key'; 
+console.log('JWT_SECRET:', JWT_SECRET);
+
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-// Secret Key for JWT
-const JWT_SECRET = 'yourSecretKey'; // Store securely in environment variables
 
 // Routes
 
@@ -25,14 +28,17 @@ app.post('/register', async (req, res) => {
             return res.status(400).json({ error: "All fields are required." });
         }
 
+        // Check if username already exists
         const existingUser = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
         if (existingUser.rows.length > 0) {
             return res.status(400).json({ error: "Username already exists. Please choose a different one." });
         }
 
+        // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        // Insert the new user into the database
         const newUser = await pool.query(
             "INSERT INTO users (email, username, password) VALUES ($1, $2, $3) RETURNING id, email, username",
             [email, username, hashedPassword]
@@ -54,18 +60,42 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ error: "Username and password are required." });
         }
 
-        const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
-        if (user.rows.length === 0) {
+        // Check if user exists
+        const userQuery = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
+
+        if (userQuery.rows.length === 0) {
+            console.log('User not found');
             return res.status(400).json({ error: "Invalid username or password." });
         }
 
-        const validPassword = await bcrypt.compare(password, user.rows[0].password);
+        const user = userQuery.rows[0];
+        console.log('User found:', user);
+
+        // Check if the password is valid
+        const validPassword = await bcrypt.compare(password, user.password);
+
         if (!validPassword) {
+            console.log('Password mismatch');
             return res.status(400).json({ error: "Invalid username or password." });
         }
 
-        const token = jwt.sign({ userId: user.rows[0].id }, JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).json({ message: "Login successful!", token, user: { id: user.rows[0].id, username: user.rows[0].username } });
+        // Generate JWT token (short-lived)
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Generate refresh token 
+        const refreshToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+        // Respond with success, user data, and the access token
+        res.status(200).json({
+            message: "Login successful!",
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                token: token, 
+            }
+        });
+
     } catch (err) {
         console.error("Error during login:", err.message);
         res.status(500).send("Server error");
@@ -128,6 +158,8 @@ app.get('/get-sets/:userId', async (req, res) => {
     }
 });
 
+
+
 // Get username by userId
 app.get('/get-username/:id', async (req, res) => {
     const userId = req.params.id;
@@ -148,6 +180,27 @@ app.get('/get-username/:id', async (req, res) => {
     }
 });
 
+// Get user cards
+app.get('/get-flashcards/:set_id/:userId', async (req, res) => {
+    const { set_id, userId } = req.params;
+
+    try {
+        const query = `
+            SELECT f.set_id, f.question, f.answer
+            FROM flashcards f
+            INNER JOIN flashcardsets fs ON f.set_id = fs.id
+            WHERE fs.user_id = $1 AND fs.id = $2;
+        `;
+        const { rows } = await pool.query(query, [userId, set_id]);
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'No flashcards found for this user and set.' });
+        }
+        res.json(rows);
+    } catch (error) {
+        console.error('Error fetching flashcards:', error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
     const token = req.header('Authorization');
@@ -165,7 +218,21 @@ function authenticateToken(req, res, next) {
     });
 }
 
+// Refresh token endpoint
+app.post('/refresh-token', async (req, res) => {
+    const { refreshToken } = req.body;
+    try {
+      // Verify the refresh token
+      const decoded = jwt.verify(refreshToken, 'your_refresh_secret');
+      const newAccessToken = jwt.sign({ userId: decoded.userId }, 'your_access_secret', { expiresIn: '1h' });
+      res.json({ accessToken: newAccessToken });
+    } catch (err) {
+      return res.status(401).json({ message: 'Invalid or expired refresh token' });
+    }
+  });
+
 // Start server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
