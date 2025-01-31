@@ -1,8 +1,9 @@
-# React + Vite
+# Studyio 📚
+Created by a student, for students.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Studyio is a web application designed to enhance learning through customizable flashcards and interactive memorization games. Built with Vite, React, Node.js, Express.js, and PostgreSQL, Studyio provides a seamless experience for users to create and manage their flashcard sets.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ⚠️ Under Construction Features⚠️
+1. AI-Generated Quizzes: Generate quizzes based on your flashcard sets to test your knowledge.
+2.  Cloud Database Integration: The application is transitioning to a cloud database to improve scalability and reliability.
+3. Trending Flashcard Sets: Explore popular and trending flashcard sets to enhance your study experience.
